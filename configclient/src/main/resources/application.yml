@@ -1,0 +1,10 @@
+server:
+  port: 8082
+
+spring:
+  config:
+    import: "optional:configserver:http://localhost:8081/"  #client server를 8081로 맞춘다 즉 config server의 url
+  cloud:
+    config:
+      name: config
+      profile: dev

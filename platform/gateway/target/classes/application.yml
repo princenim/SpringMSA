@@ -1,0 +1,42 @@
+server:
+  port: 8000
+
+eureka:
+  client:
+    register-with-eureka: true
+    fetch-registry: true
+    service-url:
+      defaultZone: http://localhost:8761/eureka
+
+
+
+#1. 설정파일에서 라우팅하기
+spring:
+  application:  #gateway service 이름름
+    name: gateway-service
+  cloud:
+    gateway:  #gateway 설정
+      routes:
+        - id: first-service #gateway로 연결될 서비스 이름
+          uri: lb://first-service #uri: http://127.0.0.1:8762/ #gateway로 연결될 서비스 uri, 즉 실제 라우팅될 uri
+          predicates: #gateway로 연결될 서비스의 url 매핑, 라우팅 조건
+            Path=/first-service/** # 이 패턴을 따르는 주소라면 지정한 uri로 라우팅된다.즉 ,localhost:8000/fisrt-service -> localhost:8762
+        - id: second-service
+          uri: lb://second-service #uri: http://127.0.0.1:8763/
+          predicates:
+            Path=/second-service/*
+
+
+# 라우팅
+#          spring:
+#            application: #gateway service 이름름
+#              name: gateway-service
+#            cloud:
+#              gateway: #gateway 설정
+#                routes:
+#                  - id: first-service #gateway로 연결될 서비스 이름
+#                    uri: http://127.0.0.1:8762/ #gateway로 연결될 서비스 uri, 즉 실제 라우팅될 uri
+#                    predicates: #gateway로 연결될 서비스의 url 매핑, 라우팅 조건
+#                      - Path=/first-service/** # 이 패턴을 따르는 주소라면 지정한 uri로 라우팅된다.
+#                      - #즉  localhost:8000/fisrt-service -> localhost:8762/first-service
+
